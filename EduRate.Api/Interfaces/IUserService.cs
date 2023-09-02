@@ -7,7 +7,7 @@ namespace EduRate.Api.Interfaces
         bool Register(User user);
         string Authenticate(LoginRequest request);
         User Login(LoginRequest request);
-        User Logout(int userId);
+        User Logout(int userId, string token);
         User GetProfile(int userId);
         User UpdateProfile(User user);
     }

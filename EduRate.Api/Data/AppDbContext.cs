@@ -15,5 +15,7 @@ public class AppDbContext : DbContext
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Module> Modules { get; set; }
     public DbSet<Interaction> Interactions { get; set; }
-    
+    public DbSet<Rating> Ratings { get; set; }
+
+
 }

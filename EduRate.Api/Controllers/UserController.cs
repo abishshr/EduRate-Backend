@@ -1,7 +1,8 @@
 ﻿using EduRate.Api.Interfaces;
-using EduRate.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using EduRate.Api.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 
 namespace EduRate.Api.Controllers
 {
@@ -34,18 +35,38 @@ namespace EduRate.Api.Controllers
             return Ok(new { Token = token });
         }
 
-        [HttpGet("logout")]
+        [HttpPost("logout")]
         public IActionResult Logout()
         {
-            // Logic for logout can go here
-            return Ok("Logged out successfully.");
+            string authHeader = HttpContext.Request.Headers["Authorization"];
+            if (authHeader != null && authHeader.StartsWith("Bearer "))
+            {
+                var token = authHeader.Substring("Bearer ".Length).Trim();
+                var user = _userService.Logout(1, token); // replace 1 with actual userId from your claims or database
+                if (user != null)
+                {
+                    return Ok("Logged out successfully.");
+                }
+            }
+            return BadRequest("Could not log out.");
         }
 
         [HttpGet("profile")]
         public IActionResult GetProfile()
         {
-            // Logic for fetching user profile can go here
-            return Ok("User profile information.");
+            // Extract user ID from JWT token
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Split(" ").Last();
+            var jwtToken = new JwtSecurityToken(token);
+            var userIdClaim = jwtToken.Claims.First(claim => claim.Type == "name");
+            if (int.TryParse(userIdClaim.Value, out int userId))
+            {
+                var user = _userService.GetProfile(userId);
+                if (user != null)
+                {
+                    return Ok(user);
+                }
+            }
+            return NotFound("User profile not found.");
         }
 
         [HttpPut("profile")]

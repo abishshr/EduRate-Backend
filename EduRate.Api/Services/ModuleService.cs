@@ -1,28 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using EduRate.Api.Interfaces;
+﻿using EduRate.Api.Interfaces;
 using EduRate.Api.Models;
+using EduRate.Api.Data;
 
 namespace EduRate.Api.Services
 {
     public class ModuleService : IModuleService
     {
+        private readonly AppDbContext _context;
+
+        public ModuleService(AppDbContext context)
+        {
+            _context = context;
+        }
+
         public IEnumerable<Module> GetAllModules()
         {
-            // Implement logic to fetch all modules
-            throw new NotImplementedException();
+            return _context.Modules.ToList();
+        }
+
+        public Module AddModule(Module newModule)
+        {
+            _context.Modules.Add(newModule);
+            _context.SaveChanges();
+            return newModule;
         }
 
         public Module GetModuleById(int moduleId)
         {
-            // Implement your logic here to fetch a module by its ID
-            return null;  // Example return value; update as needed
+            return _context.Modules.FirstOrDefault(m => m.Id == moduleId);
         }
 
         public IEnumerable<Module> SearchModules(string query)
         {
-            // Implement search logic
-            throw new NotImplementedException();
+            return _context.Modules.Where(m => m.Name.Contains(query) || m.Course.Contains(query) || m.Faculty.Contains(query)).ToList();
         }
     }
 }

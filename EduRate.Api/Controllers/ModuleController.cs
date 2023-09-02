@@ -1,7 +1,6 @@
 ﻿using EduRate.Api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using EduRate.Api.Models;
-using EduRate.Api.Services;
 
 namespace EduRate.Api.Controllers
 {
@@ -28,7 +27,9 @@ namespace EduRate.Api.Controllers
         {
             var module = _moduleService.GetModuleById(moduleId);
             if (module == null)
+            {
                 return NotFound();
+            }
             return Ok(module);
         }
 
@@ -37,6 +38,25 @@ namespace EduRate.Api.Controllers
         {
             var modules = _moduleService.SearchModules(query);
             return Ok(modules);
+        }
+
+        [HttpPost]
+        public IActionResult CreateModule([FromBody] Module newModule)
+        {
+            if (newModule == null)
+            {
+                return BadRequest("Module cannot be null");
+            }
+
+            // Validate the module object here before you save it to the database
+            if (string.IsNullOrEmpty(newModule.Name) || string.IsNullOrEmpty(newModule.Faculty))
+            {
+                return BadRequest("Name and Faculty fields must not be empty");
+            }
+
+            var createdModule = _moduleService.AddModule(newModule);
+
+            return CreatedAtAction(nameof(GetModuleById), new { moduleId = createdModule.Id }, createdModule);
         }
     }
 }

@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     // Your DbSet properties go here. For example:
     public DbSet<User> Users { get; set; }
     public DbSet<Comment> Comments { get; set; }
+    public DbSet<Module> Modules { get; set; }
     public DbSet<Interaction> Interactions { get; set; }
     
 }

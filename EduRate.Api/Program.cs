@@ -16,6 +16,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddScoped<IInteractionService, InteractionService>();
+builder.Services.AddScoped<IModuleService, ModuleService>();
 
 // Add DbContext using InMemory provider
 builder.Services.AddDbContext<AppDbContext>(options =>

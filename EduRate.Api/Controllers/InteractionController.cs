@@ -1,6 +1,5 @@
 ﻿using EduRate.Api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using EduRate.Api.Services;
 
 namespace EduRate.Api.Controllers
 {
@@ -31,6 +30,16 @@ namespace EduRate.Api.Controllers
             if (result)
                 return Ok();
             return BadRequest();
+        }
+
+        // New method to get the vote count for a comment
+        [HttpGet("votes/{commentId}")]
+        public IActionResult GetCommentVotes(int commentId)
+        {
+            int voteCount = _interactionService.GetCommentVotes(commentId);
+
+            // Return the vote count in the response, perhaps as a JSON object
+            return Ok(new { votes = voteCount });
         }
     }
 }

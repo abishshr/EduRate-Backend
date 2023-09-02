@@ -4,5 +4,7 @@
     {
         bool UpvoteComment(int commentId);
         bool DownvoteComment(int commentId);
+        int GetCommentVotes(int commentId);
+        
     }
 }

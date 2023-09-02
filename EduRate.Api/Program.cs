@@ -1,3 +1,7 @@
+using EduRate.Api.Data;
+using EduRate.Api.Interfaces;
+using EduRate.Api.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +14,12 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "EduRate API", Version = "v1" });
 });
+
+builder.Services.AddScoped<IInteractionService, InteractionService>();
+
+// Add DbContext using InMemory provider
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseInMemoryDatabase("InMemoryDb"));
 
 var app = builder.Build();
 
